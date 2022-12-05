@@ -20,9 +20,9 @@ def main():
         nums = [int(num) for num in words if num.isdigit()]
         instructions.append(nums)
     
-    # take them off the top multiple at a time from source and add to dest
-    for j in range(len(instructions)):
-        quant, source, dest = instructions[j]
+    # take them off the top (starting at 0) multiple at a time from source and add to dest
+    for i in range(len(instructions)):
+        quant, source, dest = instructions[i]
         top_vals = stacks[source - 1][0:quant]
         stacks[dest - 1] = top_vals + stacks[dest - 1]
         stacks[source - 1] = stacks[source - 1][quant:]

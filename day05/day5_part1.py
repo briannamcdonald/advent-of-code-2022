@@ -21,9 +21,9 @@ def main():
         instructions.append(nums)
     
     # take them off the top (starting at 0) one at a time from source and add to dest
-    for j in range(len(instructions)):
-        quant, source, dest = instructions[j]
-        for i in range(quant):
+    for i in range(len(instructions)):
+        quant, source, dest = instructions[i]
+        for _ in range(quant):
             top_val = stacks[source - 1][0]
             stacks[dest - 1].insert(0, top_val)
             stacks[source - 1] = stacks[source - 1][1:]
