@@ -4,21 +4,20 @@ def main():
 
     path = "/"
     dirs = {"/": 0}
-    for line in data:
-        if line[0] == "$":
-            c, cmd, *args = line.split(" ")
-            if cmd == "cd":
-                if args[0] != ".." and args[0] != "/":
-                    # add new dir to path
-                    path += "/" + args[0]
-                elif args[0] != "/":
-                    # remove last dir from path
-                    index = path.rfind("/")
-                    path = path[:index]
 
+    for line in data:
+        if line.startswith("$ cd"):
+            arg = line.split(" ")[2]
+            
+            if arg != ".." and arg != "/":
+                path += "/" + arg  # add new dir to path
+            elif arg != "/":
+                index = path.rfind("/")
+                path = path[:index]  # remove last dir from path
+
+        elif line.startswith("$ ls"): continue
         else:
             size, name = line.split(" ")
-            index = path.rfind("/")
 
             if size == "dir":
                 dirs[path + "/" + name] = 0
@@ -29,9 +28,7 @@ def main():
                     index = new_path.rfind("/")
                     new_path = new_path[:index]
 
-    unused_space = 70000000 - int(dirs["/"])
-    needed_space = 30000000 - unused_space
-
+    needed_space = 30000000 - (70000000 - int(dirs["/"]))
     options = {}
     for key in dirs:
         if dirs[key] >= needed_space:

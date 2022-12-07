@@ -4,22 +4,20 @@ def main():
 
     path = "/"
     dirs = {"/": 0}
-    
-    for line in data:
-        if line[0] == "$":
-            c, cmd, *args = line.split(" ")
-            if cmd == "cd":
-                if args[0] != ".." and args[0] != "/":
-                    # add new dir to path
-                    path += "/" + args[0]
-                elif args[0] != "/":
-                    # remove last dir from path
-                    index = path.rfind("/")
-                    path = path[:index]
 
+    for line in data:
+        if line.startswith("$ cd"):
+            arg = line.split(" ")[2]
+            
+            if arg != ".." and arg != "/":
+                path += "/" + arg  # add new dir to path
+            else:
+                index = path.rfind("/")
+                path = path[:index]  # remove last dir from path
+
+        elif line.startswith("$ ls"): continue
         else:
             size, name = line.split(" ")
-            index = path.rfind("/")
 
             if size == "dir":
                 dirs[path + "/" + name] = 0
@@ -28,13 +26,9 @@ def main():
                 while new_path != "":
                     dirs[new_path] += int(size)
                     index = new_path.rfind("/")
-                    new_path = new_path[:index]
+                    new_path = new_path[:index] # remove last dir from path
 
-    res_dirs = []
-    for key in dirs:
-        if dirs[key] < 100000:
-            res_dirs.append(dirs[key])
-
+    res_dirs = [dirs[key] for key in dirs if dirs[key] < 100000]
     print(sum(res_dirs))
 
 
